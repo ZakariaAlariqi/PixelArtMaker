@@ -1,20 +1,57 @@
-$(document).ready(function () { // Makes it possible to start to manipulate the document
-  $('#sizePicker').submit(function makeGrid(grid) {  // Creates the grid upon clicking the button 'Submit'
-    $('table tr').remove(); // Lets the grid be cleared when hitting the 'Submit' button again
-    var row_input = $('#input_height').val(); // Allows the user to add a chosen value inside the input box to add rows 
-    var col_input = $('#input_width').val(); // Allows the user to add a chosen value inside the 2nd input box to add columns
-    for (var i = 1; i <= row_input; i++) { 
-      $('table').append("<tr></tr>"); // This loop creates a row of cells
-      for (var j = 1; j <= col_input; j++) {
-        $('tr:last').append("<td></td>"); // This loop adds a cell after every row
-        $('td').attr("class", 'cells') // For every 'td', a class of 'cells' is created
-      }
-    }
-    grid.preventDefault(); // Prevents the grid to be deleted after it is created
+var table = document.getElementById("pixel_canvas");
+var form = document.getElementById("sizePicker");
+var color = document.querySelector("#colorPicker");
+var square = document.querySelectorAll("tr, td");
+var miniSquare = document.querySelectorAll("td");
 
-    $('.cells').click(function (event) { // The function allows the user to color a cell on click
-      var paint = $('#colorPicker').val();
-      $(event.target).css('background-color', paint); // Lets the chosen color on a click event to be added to the grid
-    });
-  }); 
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  table.innerHTML = "";
+
+  var height = document.querySelector("input[name='height']").value;
+  var width = document.querySelector("input[name='width']").value;
+
+  makeGrid(height, width);
+  
 });
+
+function makeGrid(h, w) {
+  for (var i = 0; i < h; i++) {
+    var row = document.createElement("TR");
+    table.appendChild(row);
+
+    for (var j = 0; j < w; j++) {
+      var column = document.createElement("TD");
+      table.querySelector("tr:last-child").appendChild(column);
+    }
+
+  }
+
+  square = document.querySelectorAll("tr, td");
+  miniSquare = document.querySelectorAll("td");
+
+  
+  square.forEach(function(item) {
+    item.style.border = "1px solid " + color.value;
+  });
+
+  miniSquare.forEach(item => {
+    item.addEventListener("click", () => {
+      item.style.backgroundColor = color.value;
+    })
+  })
+}
+
+color.addEventListener("change", function() {
+  var paint = this.value;
+  square.forEach(function(item) {
+    item.style.border = "1px solid " + paint;
+  });
+
+  miniSquare.forEach(item => {
+    item.style.backgroundColor = "white";
+  })
+  
+})
+
